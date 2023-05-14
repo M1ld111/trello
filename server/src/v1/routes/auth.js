@@ -7,8 +7,8 @@ const User = require('../models/user')
 
 router.post(
   '/signup',
-  body('username').isLength({ min: 8 }).withMessage(
-    'username must be at least 8 characters'
+  body('username').isLength({ min: 4 }).withMessage(
+    'username must be at least 4 characters'
   ),
   body('password').isLength({ min: 8 }).withMessage(
     'password must be at least 8 characters'
@@ -29,8 +29,8 @@ router.post(
 
 router.post(
   '/login',
-  body('username').isLength({ min: 8 }).withMessage(
-    'username must be at least 8 characters'
+  body('username').isLength({ min: 4 }).withMessage(
+    'username must be at least 4 characters'
   ),
   body('password').isLength({ min: 8 }).withMessage(
     'password must be at least 8 characters'

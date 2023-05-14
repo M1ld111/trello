@@ -1,4 +1,4 @@
-import { Box, TextField, Button } from '@mui/material'
+import { Box, Button, TextField } from '@mui/material'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import LoadingButton from '@mui/lab/LoadingButton'
@@ -41,39 +41,42 @@ const Signup = () => {
       err = true
       setConfirmPasswordErrText('Confirm password not match')
     }
+
     if (err) return
 
     setLoading(true)
 
     try {
-      const res = await authApi.signup((
+      const res = await authApi.signup({
         username, password, confirmPassword
-      ))
+      })
       setLoading(false)
       localStorage.setItem('token', res.token)
       navigate('/')
     } catch (err) {
       const errors = err.data.errors
       console.log(errors)
-      // errors.forEach(e => {
-      //   if (e.param === 'username') {
-      //     setUsernameErrText(e.msg)
-      //   }
-      //   if (e.param === 'password') {
-      //     setPasswordErrText(e.msg)
-      //   }
-      //   if (e.param === 'confirmPassword') {
-      //     setConfirmPasswordErrText(e.msg)
-      //   }
-      // })
+      errors.forEach(e => {
+        console.log(e)
+        if (e.path === 'username') {
+          setUsernameErrText(e.msg)
+        }
+        if (e.path === 'password') {
+          setPasswordErrText(e.msg)
+        }
+        if (e.path === 'confirmPassword') {
+          setConfirmPasswordErrText(e.msg)
+        }
+      })
       setLoading(false)
     }
   }
+
   return (
     <>
       <Box
         component='form'
-        sx={{ mt:1 }}
+        sx={{ mt: 1 }}
         onSubmit={handleSubmit}
         noValidate
       >
@@ -113,7 +116,7 @@ const Signup = () => {
           helperText={confirmPasswordErrText}
         />
         <LoadingButton
-          sx={{ mt:3, mb:2 }}
+          sx={{ mt: 3, mb: 2 }}
           variant='outlined'
           fullWidth
           color='success'
@@ -125,7 +128,7 @@ const Signup = () => {
       </Box>
       <Button
         component={Link}
-        to='/login' 
+        to='/login'
         sx={{ textTransform: 'none' }}
       >
         Already have an account? Login
