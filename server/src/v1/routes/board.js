@@ -5,45 +5,70 @@ const tokenHandler = require('../handlers/tokenHandler')
 const boardController = require('../controllers/board')
 
 router.post(
-    '/',
-    tokenHandler.verifyToken,
-    boardController.create
+  '/',
+  tokenHandler.verifyToken,
+  boardController.create
 )
 
 router.get(
-    '/',
-    tokenHandler.verifyToken,
-    boardController.getAll
+  '/',
+  tokenHandler.verifyToken,
+  boardController.getAll
 )
 
 router.put(
-    '/',
-    tokenHandler.verifyToken,
-    boardController.updatePosition
+  '/',
+  tokenHandler.verifyToken,
+  boardController.updatePosition
 )
 
 router.get(
-    '/:boardId',
-    param('boardId').custom(value => {
-        if(!validation.isObjectId(value)) {
-            return Promise.reject('invalid id')
-        } else return Promise.resolve()
-    }),
-    validation.validate,
-    tokenHandler.verifyToken,
-    boardController.getOne
+  '/favourites',
+  tokenHandler.verifyToken,
+  boardController.getFavourites
 )
 
 router.put(
-    '/:boardId',
-    param('boardId').custom(value => {
-        if(!validation.isObjectId(value)) {
-            return Promise.reject('invalid id')
-        } else return Promise.resolve()
-    }),
-    validation.validate,
-    tokenHandler.verifyToken,
-    boardController.update
+  '/favourites',
+  tokenHandler.verifyToken,
+  boardController.updateFavouritePosition
 )
+
+router.get(
+  '/:boardId',
+  param('boardId').custom(value => {
+    if (!validation.isObjectId(value)) {
+      return Promise.reject('invalid id')
+    } else return Promise.resolve()
+  }),
+  validation.validate,
+  tokenHandler.verifyToken,
+  boardController.getOne
+)
+
+router.put(
+  '/:boardId',
+  param('boardId').custom(value => {
+    if (!validation.isObjectId(value)) {
+      return Promise.reject('invalid id')
+    } else return Promise.resolve()
+  }),
+  validation.validate,
+  tokenHandler.verifyToken,
+  boardController.update
+)
+
+router.delete(
+  '/:boardId',
+  param('boardId').custom(value => {
+    if (!validation.isObjectId(value)) {
+      return Promise.reject('invalid id')
+    } else return Promise.resolve()
+  }),
+  validation.validate,
+  tokenHandler.verifyToken,
+  boardController.delete
+)
+
 
 module.exports = router
