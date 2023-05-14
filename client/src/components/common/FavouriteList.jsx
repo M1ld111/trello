@@ -5,6 +5,8 @@ import { useParams, Link } from 'react-router-dom'
 import boardApi from '../../api/boardApi'
 import { setFavouriteList } from '../../redux/features/favouriteSlice'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const FavouriteList = () => {
   const dispatch = useDispatch()
@@ -18,7 +20,8 @@ const FavouriteList = () => {
         const res = await boardApi.getFavourites()
         dispatch(setFavouriteList(res))
       } catch (err) {
-        alert(err)
+        console.log(err.statusText)
+      notify(err)
       }
     }
     getBoards()
@@ -42,9 +45,13 @@ const FavouriteList = () => {
     try {
       await boardApi.updateFavouritePosition({ boards: newList })
     } catch (err) {
-      alert(err)
+      console.log(err.statusText)
+      notify(err)
     }
   }
+
+  const notify = (err) => toast(`Not so fast, Cowboy. You have to wait a bit. Problem status: ${err.statusText}. We are fixing it`);
+
 
   return (
     <>
@@ -97,6 +104,18 @@ const FavouriteList = () => {
           )}
         </Droppable>
       </DragDropContext>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </>
   )
 }

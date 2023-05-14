@@ -6,6 +6,9 @@ import authUtils from '../../utils/authUtils'
 import Loading from '../common/Loading'
 import Sidebar from '../common/Sidebar'
 import { setUser } from '../../redux/features/userSlice'
+import { pushRotate as Menu } from 'react-burger-menu'
+import '../../css/custom-burger.css'
+
 
 const AppLayout = () => {
   const navigate = useNavigate()
@@ -18,7 +21,6 @@ const AppLayout = () => {
       if (!user) {
         navigate('/login')
       } else {
-        // save user
         dispatch(setUser(user))
         setLoading(false)
       }
@@ -31,16 +33,27 @@ const AppLayout = () => {
       <Loading fullHeight />
     ) : (
       <Box sx={{
-        display: 'flex'
-      }}>
-        <Sidebar />
-        <Box sx={{
-          flexGrow: 1,
-          p: 1,
-          width: 'max-content'
-        }}>
-          <Outlet />
-        </Box>
+        display: 'flex',
+        // maxWidth: '100%'
+      }}
+      id="outer-container"
+      >
+        {/* <Menu  /> */}
+        
+        <Menu isOpen  pageWrapId={ "page-wrap" } >
+          <Sidebar id="sidebar" />
+        </Menu>
+        
+          <Box sx={{
+            flexGrow: 1,
+            p: 1,
+            width: 'max-content',
+            marginTop: '70px'
+          }}
+          id="page-wrap">
+            <Outlet />
+          </Box>
+        
       </Box>
     )
   )

@@ -9,6 +9,8 @@ import boardApi from '../../api/boardApi'
 import { setBoards } from '../../redux/features/boardSlice'
 import {  DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import FavouriteList from './FavouriteList'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const Sidebar = () => {
@@ -59,7 +61,8 @@ const Sidebar = () => {
     try {
       await boardApi.updatePosition({ boards: newList })
     } catch (err) {
-      alert(err)
+      console.log(err.statusText)
+      notify(err)
       
     }
   }
@@ -71,9 +74,13 @@ const Sidebar = () => {
       dispatch(setBoards(newList))
       navigate(`/boards/${res.id}`)
     } catch (err) {
-      alert(err)      
+      console.log(err.statusText)
+      notify(err)      
     }
   }
+
+  const notify = (err) => toast(`Not so fast, Cowboy. You have to wait a bit. Problem status: ${err.statusText}. We are fixing it`);
+
 
   return (
     <Drawer
@@ -164,6 +171,18 @@ const Sidebar = () => {
           </Droppable>
         </DragDropContext>
       </List>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </Drawer>
   )
 }

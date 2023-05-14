@@ -6,6 +6,8 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 import sectionApi from '../../api/sectionApi'
 import taskApi from '../../api/taskApi'
 import TaskModal from './TaskModal'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 let timer
 const timeout = 500
@@ -52,7 +54,8 @@ const Kanban = props => {
       })
       setData(data)
     } catch (err) {
-      alert(err)
+      console.log(err.statusText)
+      notify(err)
     }
   }
 
@@ -61,7 +64,8 @@ const Kanban = props => {
       const section = await sectionApi.create(boardId)
       setData([...data, section])
     } catch (err) {
-      alert(err)
+      console.log(err.statusText)
+      notify(err)
     }
   }
 
@@ -71,7 +75,8 @@ const Kanban = props => {
       const newData = [...data].filter(e => e.id !== sectionId)
       setData(newData)
     } catch (err) {
-      alert(err)
+      console.log(err.statusText)
+      notify(err)
     }
   }
 
@@ -86,7 +91,8 @@ const Kanban = props => {
       try {
         await sectionApi.update(boardId, sectionId, { title: newTitle })
       } catch (err) {
-        alert(err)
+        console.log(err.statusText)
+      notify(err)
       }
     }, timeout);
   }
@@ -99,7 +105,8 @@ const Kanban = props => {
       newData[index].tasks.unshift(task)
       setData(newData)
     } catch (err) {
-      alert(err)
+      console.log(err.statusText)
+      notify(err)
     }
   }
 
@@ -119,12 +126,15 @@ const Kanban = props => {
     setData(newData)
   }
 
+  const notify = (err) => toast(`Not so fast, Cowboy. You have to wait a bit. Problem status: ${err.statusText}. We are fixing it`);
+
   return (
     <>
       <Box sx={{
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        // maxWidth: '100%'
       }}>
         <Button onClick={createSection}>
           Add section
@@ -136,10 +146,11 @@ const Kanban = props => {
       <Divider sx={{ margin: '10px 0' }} />
       <DragDropContext onDragEnd={onDragEnd}>
         <Box sx={{
+          justifySelf: 'center',
           display: 'flex',
           alignItems: 'flex-start',
-          width: 'calc(100vw - 400px)',
-          overflowX: 'auto'
+          gap: '15px',
+          overflowX: 'auto',
         }}>
           {
             data.map(section => (
@@ -149,7 +160,13 @@ const Kanban = props => {
                     <Box
                       ref={provided.innerRef}
                       {...provided.droppableProps}
-                      sx={{ width: '300px', padding: '10px', marginRight: '10px' }}
+                      sx={{ width: '300px', 
+                      padding: '10px', 
+                      marginRight: '10px', 
+                      border: '2px solid grey',
+                      borderRadius: '5px',
+                      marginBottom: '10px'                  
+                    }}
                     >
                       <Box sx={{
                         display: 'flex',
@@ -230,6 +247,18 @@ const Kanban = props => {
         onClose={() => setSelectedTask(undefined)}
         onUpdate={onUpdateTask}
         onDelete={onDeleteTask}
+      />
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
       />
     </>
   )

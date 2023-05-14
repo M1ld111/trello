@@ -10,6 +10,8 @@ import EmojiPicker from '../components/common/EmojiPicker'
 import Kanban from '../components/common/Kanban'
 import { setBoards } from '../redux/features/boardSlice'
 import { setFavouriteList } from '../redux/features/favouriteSlice'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 let timer
 const timeout = 500
@@ -37,7 +39,8 @@ const Board = () => {
         setIsFavourite(res.favourite)
         setIcon(res.icon)
       } catch (err) {
-        alert(err)
+        console.log(err.statusText)
+        notify(err)
       }
     }
     getBoard()
@@ -60,7 +63,8 @@ const Board = () => {
     try {
       await boardApi.update(boardId, { icon: newIcon })
     } catch (err) {
-      alert(err)
+      console.log(err.statusText)
+      notify(err)
     }
   }
 
@@ -86,7 +90,8 @@ const Board = () => {
       try {
         await boardApi.update(boardId, { title: newTitle })
       } catch (err) {
-        alert(err)
+        console.log(err.statusText)
+        notify(err)
       }
     }, timeout);
   }
@@ -99,7 +104,8 @@ const Board = () => {
       try {
         await boardApi.update(boardId, { description: newDescription })
       } catch (err) {
-        alert(err)
+        console.log(err.statusText)
+        notify(err)
       }
     }, timeout);
   }
@@ -116,7 +122,8 @@ const Board = () => {
       dispatch(setFavouriteList(newFavouriteList))
       setIsFavourite(!isFavourite)
     } catch (err) {
-      alert(err)
+      console.log(err.statusText)
+      notify(err)
     }
   }
 
@@ -136,19 +143,29 @@ const Board = () => {
       }
       dispatch(setBoards(newList))
     } catch (err) {
-      alert(err)
+      console.log(err.statusText)
+      notify(err)
     }
   }
 
+  const notify = (err) => toast(`Not so fast, Cowboy. You have to wait a bit. Problem status: ${err.statusText}. We are fixing it`);
+
   return (
-    <>
+    <Box sx={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '100vw',
+    }}>
       <Box sx={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        width: '100%'
+        width: '100%',
+        padding: '0 50px'
       }}>
-        <IconButton variant='outlined' onClick={addFavourite}>
+        <IconButton sx={{border: '2px solid grey'}} variant='outlined' onClick={addFavourite}>
           {
             isFavourite ? (
               <StarOutlinedIcon color='warning' />
@@ -157,13 +174,14 @@ const Board = () => {
             )
           }
         </IconButton>
-        <IconButton variant='outlined' color='error' onClick={deleteBoard}>
+        <IconButton sx={{border: '2px solid grey'}} variant='outlined' color='error' onClick={deleteBoard}>
           <DeleteOutlinedIcon />
         </IconButton>
       </Box>
-      <Box sx={{ padding: '10px 50px' }}>
+      <Box sx={{ padding: '10px 50px', 
+        width: '100%',
+         }}>
         <Box>
-          {/* emoji picker */}
           <EmojiPicker icon={icon} onChange={onIconChange} />
           <TextField
             value={title}
@@ -174,7 +192,8 @@ const Board = () => {
             sx={{
               '& .MuiOutlinedInput-input': { padding: 0 },
               '& .MuiOutlinedInput-notchedOutline': { border: 'unset ' },
-              '& .MuiOutlinedInput-root': { fontSize: '2rem', fontWeight: '700' }
+              '& .MuiOutlinedInput-root': { fontSize: '2rem', fontWeight: '700' },
+              // border: '2px solid grey'
             }}
           />
           <TextField
@@ -195,7 +214,19 @@ const Board = () => {
           <Kanban data={sections} boardId={boardId} />
         </Box>
       </Box>
-    </>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
+    </Box>
   )
 }
 

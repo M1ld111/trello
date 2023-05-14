@@ -5,6 +5,8 @@ import Moment from 'moment'
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import taskApi from '../../api/taskApi'
+// import { ToastContainer, toast } from 'react-toastify';
+// import 'react-toastify/dist/ReactToastify.css';
 
 import '../../css/custom-editor.css'
 
@@ -65,7 +67,8 @@ const TaskModal = props => {
       props.onDelete(task)
       setTask(undefined)
     } catch (err) {
-      alert(err)
+      console.log(err.statusText)
+      // notify(err)
     }
   }
 
@@ -76,7 +79,8 @@ const TaskModal = props => {
       try {
         await taskApi.update(boardId, task.id, { title: newTitle })
       } catch (err) {
-        alert(err)
+        console.log(err.statusText)
+      // notify(err)
       }
     }, timeout)
 
@@ -96,7 +100,8 @@ const TaskModal = props => {
         try {
           await taskApi.update(boardId, task.id, { content: data })
         } catch (err) {
-          alert(err)
+          console.log(err.statusText)
+          // notify(err)
         }
       }, timeout);
 
@@ -105,6 +110,9 @@ const TaskModal = props => {
       props.onUpdate(task)
     }
   }
+
+  // const notify = (promlem) => toast(`Not so fast, Cowboy. You have to wait a bit. Problem status: ${promlem.statusText}. We are fixing it`);
+
 
   return (
     <Modal
@@ -170,6 +178,18 @@ const TaskModal = props => {
           </Box>
         </Box>
       </Fade>
+      {/* <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      /> */}
     </Modal>
   )
 }
